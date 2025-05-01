@@ -1,0 +1,46 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .dashboard-content,
+  .events-content,
+  .main-categories-content,
+  .main-category-details-content {
+    padding: 10px;
+  }
+
+  .dashboard-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .events-table,
+  .main-categories-table,
+  .details-table {
+    font-size: 14px;
+  }
+
+  .events-table th,
+  .events-table td,
+  .main-categories-table th,
+  .main-categories-table td,
+  .details-table th,
+  .details-table td {
+    padding: 8px;
+  }
+}
