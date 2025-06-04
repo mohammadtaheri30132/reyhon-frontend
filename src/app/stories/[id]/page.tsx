@@ -40,7 +40,7 @@ export default function StoriesPage() {
   const fetchStoryType = async () => {
     try {
       const response = await getStoryTypes();
-      console.log('response ',response.data)
+        console.log('response ',response.data)
 
       const foundStoryType = response.data.data.find((st: StoryType) => st._id === id);
       setStoryType(foundStoryType);
