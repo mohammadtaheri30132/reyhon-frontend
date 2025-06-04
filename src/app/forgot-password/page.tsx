@@ -19,7 +19,7 @@ export default function ForgotPassword() {
       await axios.post('http://193.242.208.20:1128/api/auth/requestOTP', { mobile });
       setStep(2);
     } catch (err) {
-      console.log(err)
+      
       setError('خطا در ارسال OTP');
     }
   };
