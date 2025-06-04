@@ -17,9 +17,9 @@ export default function Events() {
   const fetchEvents = async (page = 1) => {
     try {
       const { data } = await getEvents({ page, limit }); // ارسال page و limit به صورت مستقیم
-      setEvents(data.events);
-      setTotalPages(data.totalPages);
-      setPage(data.currentPage);
+      setEvents(data?.data);
+      setTotalPages(data?.pagination?.totalPages);
+      setPage(data?.pagination?.currentPage);
     } catch (err) {
       console.error(err);
     }
@@ -86,7 +86,7 @@ export default function Events() {
             </tr>
           </thead>
           <tbody>
-            {events.map((event) => (
+            {events?.map((event) => (
               <tr key={event._id}>
                 <td>{event.content}</td>
                 <td>{event.date}</td>

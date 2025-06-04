@@ -15,8 +15,11 @@ import {
   deletePost,
 } from '../../../utils/api';
 import '../../../styles/main-category-details.css';
+import { useParams } from 'next/navigation';
 
-export default function MainCategoryDetails({ params }) {
+export default function MainCategoryDetails() {
+  const params =useParams()
+  console.log(params)
   const [tab, setTab] = useState(0);
   const [categories, setCategories] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -32,10 +35,10 @@ export default function MainCategoryDetails({ params }) {
 
   const fetchCategories = async (page = 1) => {
     try {
-      const { data } = await getCategories({ mainCategoryId: params.id, page, limit });
-      setCategories(data.categories);
-      setCategoryTotalPages(data.totalPages);
-      setCategoryPage(data.currentPage);
+      const { data } = await getCategories({ mainCategoryId: params?.id, page, limit });
+      setCategories(data?.data);
+      setCategoryTotalPages(data?.pagination?.totalPages);
+      setCategoryPage(data?.pagination?.currentPage);
     } catch (err) {
       console.error(err);
     }
@@ -44,9 +47,10 @@ export default function MainCategoryDetails({ params }) {
   const fetchPosts = async (page = 1) => {
     try {
       const { data } = await getPosts({ mainCategoryId: params.id, page, limit });
-      setPosts(data.posts);
-      setPostTotalPages(data.totalPages);
-      setPostPage(data.currentPage);
+      console.log(data)
+      setPosts(data?.data);
+      setPostTotalPages(data?.pagination?.totalPages);
+      setPostPage(data?.pagination?.currentPage);
     } catch (err) {
       console.error(err);
     }

@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:4545/api', // آدرس بک‌اند
+  baseURL: 'http://193.242.208.20:1128/api',
 });
 
-// افزودن interceptor برای درخواست‌ها
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -13,22 +12,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// افزودن interceptor برای مدیریت پاسخ‌ها و خطاها
 api.interceptors.response.use(
-  (response) => response, // پاسخ موفق مستقیم برگردانده می‌شود
+  (response) => response,
   (error) => {
     if (error.response) {
-      // خطای 401: توکن نامعتبر یا منقضی شده
       if (error.response.status === 401) {
-        localStorage.removeItem('token'); // پاک کردن توکن
-        window.location.href = '/'; // هدایت به صفحه اصلی
-      }
-      // خطای 500: مشکل سرور
-      else if (error.response.status === 500) {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+      } else if (error.response.status === 500) {
         alert('مشکل پیش آمد. لطفاً به پشتیبانی گزارش دهید.');
       }
     }
-    return Promise.reject(error); // ارور را به caller برگردان
+    return Promise.reject(error);
   }
 );
 
@@ -59,30 +54,43 @@ export const deletePost = (id) => api.delete(`/admin/post/${id}`);
 
 export const getImages = ({ page, limit }) =>
   api.get('/admin/images', { params: { page, limit } });
-
 export const uploadImage = (formData, config) =>
   api.post('/admin/images', formData, config);
-
 export const deleteImage = (id) => api.delete(`/admin/images/${id}`);
+
 // Story Type API functions
 export const getStoryTypes = (params = {}) =>
   api.get('/admin/story-types', { params });
-
 export const createStoryType = (data) =>
   api.post('/admin/story-type', data);
-
 export const updateStoryType = (id, data) =>
   api.put(`/admin/story-type/${id}`, data);
-
 export const deleteStoryType = (id) =>
   api.delete(`/admin/story-type/${id}`);
 
 // Story API functions
 export const addStory = (storyTypeId, data) =>
   api.post(`/admin/story-type/${storyTypeId}/story`, data);
-
 export const updateStory = (storyTypeId, storyId, data) =>
   api.put(`/admin/story-type/${storyTypeId}/story/${storyId}`, data);
-
 export const deleteStory = (storyTypeId, storyId) =>
   api.delete(`/admin/story-type/${storyTypeId}/story/${storyId}`);
+
+// Banner API functions
+export const getBanners = (params) => api.get('/admin/banners', { params });
+export const createBanner = (data) => api.post('/admin/banners', data);
+export const deleteBanner = (id) => api.delete(`/admin/banners/${id}`);
+
+// Comment API functions
+export const getAllCommentsAdmin = (params) => api.get('/admin/comments', { params });
+export const deleteCommentAdmin = (id) => api.delete(`/admin/comments/${id}`);
+
+// Topic API functions
+export const getAllTopicsAdmin = (params) => api.get('/admin/topics', { params });
+export const deleteTopicAdmin = (id) => api.delete(`/admin/topics/${id}`);
+export const getTopicCommentsAdmin = (params) => api.get('/admin/topics/:topicId/comments', { params });
+export const deleteTopicCommentAdmin = (id) => api.delete(`/admin/topics/comments/${id}`);
+
+
+export const getAllUsersAdmin = (params) => api.get('/admin/users', { params });
+export const deleteUserAdmin = (id) => api.delete(`/admin/users/${id}`);

@@ -21,9 +21,10 @@ export default function MainCategories() {
   const fetchMainCategories = async (page = 1) => {
     try {
       const { data } = await getMainCategories({ page, limit }); // ارسال پارامترهای پیجینیشن
-      setMainCategories(data.mainCategories);
-      setTotalPages(data.totalPages);
-      setPage(data.currentPage);
+      console.log(data)
+      setMainCategories(data?.data);
+      setTotalPages(data?.pagination?.totalPages);
+      setPage(data?.pagination?.currentPage);
     } catch (err) {
       console.error(err);
     }
@@ -92,7 +93,7 @@ export default function MainCategories() {
             </tr>
           </thead>
           <tbody>
-            {mainCategories.map((mc) => (
+            {mainCategories?.map((mc) => (
               <tr
                 key={mc._id}
                 onClick={() => router.push(`/main-categories/${mc._id}`)}

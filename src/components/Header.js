@@ -55,7 +55,9 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-content">
-        <h1>پنل ادمین</h1>
+      <button onClick={()=>router.back()} className="open-modal-button">
+          بازگشت به صفحه قبل
+        </button>
         <button onClick={handleLogout} className="logout-button">
           خروج
         </button>

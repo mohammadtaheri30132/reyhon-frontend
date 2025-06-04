@@ -16,7 +16,7 @@ export default function Login() {
   const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:4545/api/auth/requestOTP', { mobile });
+      await axios.post('http://193.242.208.20:1128/api/auth/requestOTP', { mobile });
       setStep(2);
     } catch (err) {
       setError('خطا در ارسال OTP');
@@ -26,7 +26,7 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4545/api/auth/loginWithOTP', {
+      const response = await axios.post('http://193.242.208.20:1128/api/auth/loginWithOTP', {
         mobile,
         otp,
       });

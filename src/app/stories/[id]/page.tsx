@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { getStoryTypes, addStory, updateStory, deleteStory } from '../../../utils/api';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
-
+import moment from 'jalali-moment';
 interface Story {
   _id: string;
   story_image: string;
@@ -55,13 +55,9 @@ export default function StoriesPage() {
       fetchStoryType();
     }
   }, [id]);
-
-  const convertPersianToGregorian = (persianYear: string, persianMonth: string, persianDay: string) => {
-    const persianMonthIndex = persianMonths.indexOf(persianMonth) + 1;
-    const gregorianYear = parseInt(persianYear) - 621;
-    const gregorianMonth = persianMonthIndex;
-    const gregorianDay = parseInt(persianDay);
-    return new Date(gregorianYear, gregorianMonth - 1, gregorianDay).toISOString();
+  const convertPersianToGregorian = (persianYear, persianMonth, persianDay) => {
+    const persianDate = `${persianYear}/${persianMonths.indexOf(persianMonth) + 1}/${persianDay}`;
+    return moment(persianDate, 'jYYYY/jM/jD').locale('en').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,12 +67,12 @@ export default function StoriesPage() {
       setError('لطفاً تاریخ نمایش را انتخاب کنید');
       return;
     }
-
+  
     const displayTime = convertPersianToGregorian(year, month, day);
-    
+
     try {
       if (editingStoryId) {
-        const response = await updateStory(id as string, editingStoryId, { story_image: storyImage });
+        const response = await updateStory(id as string, editingStoryId, { story_image: storyImage,displayTime:displayTime });
         setStoryType(response.data);
       } else {
         const response = await addStory(id as string, {

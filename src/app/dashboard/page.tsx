@@ -20,9 +20,33 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="card">
+            <h3>کاربرها</h3>
+            <button onClick={() => router.push('/users')} className="card-button">
+              مدیریت کاربرها
+            </button>
+          </div>
+          <div className="card">
             <h3>سر دسته‌ها</h3>
             <button onClick={() => router.push('/main-categories')} className="card-button">
               مدیریت سر دسته‌ها
+            </button>
+          </div>
+          <div className="card">
+            <h3>بنرها</h3>
+            <button onClick={() => router.push('/banners')} className="card-button">
+              مدیریت بنرها
+            </button>
+          </div>
+          <div className="card">
+            <h3>نظرات</h3>
+            <button onClick={() => router.push('/comments')} className="card-button">
+              مدیریت نظرات
+            </button>
+          </div>
+          <div className="card">
+            <h3>تاپیک‌ها</h3>
+            <button onClick={() => router.push('/topics')} className="card-button">
+              مدیریت تاپیک‌ها
             </button>
           </div>
         </div>
