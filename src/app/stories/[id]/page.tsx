@@ -40,9 +40,12 @@ export default function StoriesPage() {
   const fetchStoryType = async () => {
     try {
       const response = await getStoryTypes();
-      const foundStoryType = response.data.find((st: StoryType) => st._id === id);
+      console.log('response ',response.data)
+
+      const foundStoryType = response.data.data.find((st: StoryType) => st._id === id);
       setStoryType(foundStoryType);
     } catch (err) {
+      console.log('tesst')
       setError('Failed to fetch story type');
     }
   };
@@ -358,7 +361,7 @@ export default function StoriesPage() {
         </div>
       )}
 
-      {storyType.stories.length === 0 ? (
+      {storyType?.stories?.length === 0 ? (
         <p style={{
           textAlign: 'center',
           color: '#666',

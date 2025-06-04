@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { uploadImage, getImages, deleteImage } from '../utils/api';
 import '../styles/image-modal.css';
 import { Input } from '@mui/material';
+import {normalizeImageUrl} from './../utils/helper'
 
 export default function ImageModal({ open, onClose, fetchImages }) {
   const [file, setFile] = useState(null);
@@ -117,6 +118,7 @@ export default function ImageModal({ open, onClose, fetchImages }) {
 
   if (!open) return null;
 
+
   return (
     <div className="image-modal-overlay">
       <div className="image-modal">
@@ -153,11 +155,11 @@ export default function ImageModal({ open, onClose, fetchImages }) {
             <div className="image-grid">
               {images.map((image) => (
                 <div key={image._id} className="image-item">
-                  <img src={image.url} alt={image.originalName} />
+                  <img src={normalizeImageUrl(image.url)} alt={image.originalName} />
                   <div className="image-info">
-                    <Input value={image.url} multiline contentEditable={false}/>
+                    <Input value={normalizeImageUrl(image.url)} multiline contentEditable={false}/>
                     <button
-                      onClick={() => handleCopyLink(image.url)}
+                      onClick={() => handleCopyLink(normalizeImageUrl(image.url))}
                       className="copy-button"
                     >
                       کپی لینک

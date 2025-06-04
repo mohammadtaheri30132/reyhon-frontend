@@ -26,6 +26,12 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="card">
+            <h3>استوری</h3>
+            <button onClick={() => router.push('/stories')} className="card-button">
+              مدیریت استوری
+            </button>
+          </div>
+          <div className="card">
             <h3>سر دسته‌ها</h3>
             <button onClick={() => router.push('/main-categories')} className="card-button">
               مدیریت سر دسته‌ها

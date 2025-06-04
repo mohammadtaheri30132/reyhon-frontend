@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { getStoryTypes, createStoryType, updateStoryType, deleteStoryType } from '../../utils/api';
 import Header from '@/components/Header';
+import { normalizeImageUrl } from '@/utils/helper';
 
 interface StoryType {
   _id: string;
@@ -23,7 +24,7 @@ export default function StoryTypesPage() {
   const fetchStoryTypes = async () => {
     try {
       const response = await getStoryTypes();
-      setStoryTypes(response.data);
+      setStoryTypes(response.data.data);
     } catch (err) {
       setError('Failed to fetch story types');
     }
@@ -189,7 +190,7 @@ export default function StoryTypesPage() {
         display: 'grid',
         gap: '20px',
       }}>
-        {storyTypes.map((storyType) => (
+        {storyTypes?.map((storyType) => (
           <div
             key={storyType._id}
             style={{
@@ -212,7 +213,7 @@ export default function StoryTypesPage() {
                 {storyType.name}
               </h2>
               <img
-                src={storyType.profile}
+                src={normalizeImageUrl(storyType.profile)}
                 alt="Story"
                 style={{
                   width: '100%',
