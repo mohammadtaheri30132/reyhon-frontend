@@ -18,11 +18,12 @@ import '../../../styles/main-category-details.css';
 import { useParams } from 'next/navigation';
 
 export default function MainCategoryDetails() {
-  const params =useParams()
-  console.log(params)
+  const params = useParams();
+  const mainCategoryId = params?.id as string;
+
   const [tab, setTab] = useState(0);
-  const [categories, setCategories] = useState([]);
-  const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [categoryPage, setCategoryPage] = useState(1);
   const [postPage, setPostPage] = useState(1);
   const [categoryTotalPages, setCategoryTotalPages] = useState(1);
@@ -30,40 +31,41 @@ export default function MainCategoryDetails() {
   const [limit] = useState(20);
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [openPostModal, setOpenPostModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
 
   const fetchCategories = async (page = 1) => {
+    if (!mainCategoryId) return;
     try {
-      const { data } = await getCategories({ mainCategoryId: params?.id, page, limit });
-      setCategories(data?.data);
-      setCategoryTotalPages(data?.pagination?.totalPages);
-      setCategoryPage(data?.pagination?.currentPage);
+      const { data } = await getCategories({ mainCategoryId, page, limit });
+      setCategories(data?.data || []);
+      setCategoryTotalPages(data?.pagination?.totalPages || 1);
+      setCategoryPage(data?.pagination?.currentPage || 1);
     } catch (err) {
       console.error(err);
     }
   };
 
   const fetchPosts = async (page = 1) => {
+    if (!mainCategoryId) return;
     try {
-      const { data } = await getPosts({ mainCategoryId: params.id, page, limit });
-      console.log(data)
-      setPosts(data?.data);
-      setPostTotalPages(data?.pagination?.totalPages);
-      setPostPage(data?.pagination?.currentPage);
+      const { data } = await getPosts({ mainCategoryId, page, limit });
+      setPosts(data?.data || []);
+      setPostTotalPages(data?.pagination?.totalPages || 1);
+      setPostPage(data?.pagination?.currentPage || 1);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    if (params.id) {
+    if (mainCategoryId) {
       fetchCategories(categoryPage);
       fetchPosts(postPage);
     }
-  }, [params.id, categoryPage, postPage]);
+  }, [mainCategoryId, categoryPage, postPage]);
 
-  const handleOpenCategoryModal = (category = null) => {
+  const handleOpenCategoryModal = (category: any = null) => {
     setSelectedCategory(category);
     setOpenCategoryModal(true);
   };
@@ -73,7 +75,7 @@ export default function MainCategoryDetails() {
     setSelectedCategory(null);
   };
 
-  const handleOpenPostModal = (post = null) => {
+  const handleOpenPostModal = (post: any = null) => {
     setSelectedPost(post);
     setOpenPostModal(true);
   };
@@ -83,12 +85,12 @@ export default function MainCategoryDetails() {
     setSelectedPost(null);
   };
 
-  const handleCategorySubmit = async (data) => {
+  const handleCategorySubmit = async (data: any) => {
     try {
       if (selectedCategory) {
         await updateCategory(selectedCategory._id, data);
       } else {
-        await createCategory({ ...data, mainCategoryId: params.id });
+        await createCategory({ ...data, mainCategoryId });
       }
       fetchCategories(categoryPage);
       handleCloseCategoryModal();
@@ -97,12 +99,16 @@ export default function MainCategoryDetails() {
     }
   };
 
-  const handlePostSubmit = async (data) => {
+  const handlePostSubmit = async (data: any) => {
     try {
+      const payload = selectedPost
+        ? data
+        : { ...data, categoryId: data.category }; // create → categoryId
+
       if (selectedPost) {
-        await updatePost(selectedPost._id, data);
+        await updatePost(selectedPost._id, payload);
       } else {
-        await createPost(data);
+        await createPost(payload);
       }
       fetchPosts(postPage);
       handleClosePostModal();
@@ -111,31 +117,35 @@ export default function MainCategoryDetails() {
     }
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    try {
-      await deleteCategory(categoryId);
-      fetchCategories(categoryPage);
-    } catch (err) {
-      console.error(err);
+  const handleDeleteCategory = async (categoryId: string) => {
+    if (confirm('آیا از حذف این دسته‌بندی اطمینان دارید؟')) {
+      try {
+        await deleteCategory(categoryId);
+        fetchCategories(categoryPage);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  const handleDeletePost = async (postId) => {
-    try {
-      await deletePost(postId);
-      fetchPosts(postPage);
-    } catch (err) {
-      console.error(err);
+  const handleDeletePost = async (postId: string) => {
+    if (confirm('آیا از حذف این مطلب اطمینان دارید؟')) {
+      try {
+        await deletePost(postId);
+        fetchPosts(postPage);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  const handleCategoryPageChange = (newPage) => {
+  const handleCategoryPageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= categoryTotalPages) {
       setCategoryPage(newPage);
     }
   };
 
-  const handlePostPageChange = (newPage) => {
+  const handlePostPageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= postTotalPages) {
       setPostPage(newPage);
     }
@@ -160,6 +170,7 @@ export default function MainCategoryDetails() {
             مطالب
           </button>
         </div>
+
         {tab === 0 && (
           <div className="tab-content">
             <button onClick={() => handleOpenCategoryModal()} className="add-button">
@@ -196,6 +207,7 @@ export default function MainCategoryDetails() {
                 ))}
               </tbody>
             </table>
+
             <div className="pagination">
               <button
                 onClick={() => handleCategoryPageChange(categoryPage - 1)}
@@ -215,6 +227,7 @@ export default function MainCategoryDetails() {
                 بعدی
               </button>
             </div>
+
             {openCategoryModal && (
               <CategoryModal
                 open={openCategoryModal}
@@ -225,6 +238,7 @@ export default function MainCategoryDetails() {
             )}
           </div>
         )}
+
         {tab === 1 && (
           <div className="tab-content">
             <button onClick={() => handleOpenPostModal()} className="add-button">
@@ -241,10 +255,12 @@ export default function MainCategoryDetails() {
               <tbody>
                 {posts.map((post) => (
                   <tr key={post._id}>
-                    <td>{post.title}</td>
                     <td>
-                      {categories.find((c) => c._id === post.category)?.name || '-'}
+                      {post.title && post.title.trim().length > 1
+                        ? post.title
+                        : post.content?.substring(0, 60) + '...'}
                     </td>
+                    <td>{post.category?.name || '-'}</td>
                     <td>
                       <button
                         onClick={() => handleOpenPostModal(post)}
@@ -261,39 +277,41 @@ export default function MainCategoryDetails() {
                     </td>
                   </tr>
                 ))}
-                </tbody>
-              </table>
-              <div className="pagination">
-                <button
-                  onClick={() => handlePostPageChange(postPage - 1)}
-                  disabled={postPage === 1}
-                  className="pagination-button"
-                >
-                  قبلی
-                </button>
-                <span>
-                  صفحه {postPage} از {postTotalPages}
-                </span>
-                <button
-                  onClick={() => handlePostPageChange(postPage + 1)}
-                  disabled={postPage === postTotalPages}
-                  className="pagination-button"
-                >
-                  بعدی
-                </button>
-              </div>
-              {openPostModal && (
-                <PostModal
-                  open={openPostModal}
-                  onClose={handleClosePostModal}
-                  onSubmit={handlePostSubmit}
-                  categories={categories}
-                  initialData={selectedPost}
-                />
-              )}
+              </tbody>
+            </table>
+
+            <div className="pagination">
+              <button
+                onClick={() => handlePostPageChange(postPage - 1)}
+                disabled={postPage === 1}
+                className="pagination-button"
+              >
+                قبلی
+              </button>
+              <span>
+                صفحه {postPage} از {postTotalPages}
+              </span>
+              <button
+                onClick={() => handlePostPageChange(postPage + 1)}
+                disabled={postPage === postTotalPages}
+                className="pagination-button"
+              >
+                بعدی
+              </button>
             </div>
-          )}
-        </div>
+
+            {openPostModal && (
+              <PostModal
+                open={openPostModal}
+                onClose={handleClosePostModal}
+                onSubmit={handlePostSubmit}
+                categories={categories}
+                initialData={selectedPost}
+              />
+            )}
+          </div>
+        )}
       </div>
-    );
+    </div>
+  );
 }

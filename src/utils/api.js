@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://193.242.208.20:1128/api',
+  // baseURL: 'http://193.242.208.20:1128/api',
+  baseURL: 'http://localhost:4545/api',
+
 });
 
 api.interceptors.request.use((config) => {
@@ -39,12 +41,21 @@ export const getMainCategories = () => api.get('/admin/main-categories');
 export const createMainCategory = (data) => api.post('/admin/main-category', data);
 export const updateMainCategory = (id, data) => api.put(`/admin/main-category/${id}`, data);
 export const deleteMainCategory = (id) => api.delete(`/admin/main-category/${id}`);
-
+export const serachPost = ({ search = '', page = 1, limit = 20 }) =>
+  api.get('/admin/posts/search', {
+    params: {
+      search: search.trim() || undefined,
+      page,
+      limit,
+    },
+  });
 export const getCategories = ({ mainCategoryId, page, limit }) =>
   api.get('/admin/categories', { params: { mainCategoryId, page, limit } });
 export const createCategory = (data) => api.post('/admin/category', data);
 export const updateCategory = (id, data) => api.put(`/admin/category/${id}`, data);
-export const deleteCategory = (id) => api.delete(`/admin/category/${id}`);
+export const deleteCategory = (id) => api.post(`/admin/category/delete/`,{
+  id
+});
 
 export const getPosts = ({ mainCategoryId, page, limit }) =>
   api.get('/admin/posts', { params: { mainCategoryId, page, limit } });

@@ -13,30 +13,39 @@ export default function Dashboard() {
       <div className="dashboard-content">
         <h2>داشبورد ادمین</h2>
         <div className="dashboard-cards">
-          <div className="card">
-            <h3>رویدادها</h3>
-            <button onClick={() => router.push('/events')} className="card-button">
-              مدیریت رویدادها
+            <div className="card">
+            <h3>پست ها</h3>
+            <button onClick={() => router.push('/posts')} className="card-button">
+                مدیریت تمامی پست ها یکجا
             </button>
           </div>
-          <div className="card">
+            <div className="card">
+            <h3>سر دسته‌ها</h3>
+            <button onClick={() => router.push('/main-categories')} className="card-button">
+              مدیریت سر دسته‌ها
+            </button>
+          </div>
+             <div className="card">
             <h3>کاربرها</h3>
             <button onClick={() => router.push('/users')} className="card-button">
               مدیریت کاربرها
             </button>
           </div>
-          <div className="card">
+           <div className="card">
             <h3>استوری</h3>
             <button onClick={() => router.push('/stories')} className="card-button">
               مدیریت استوری
             </button>
           </div>
           <div className="card">
-            <h3>سر دسته‌ها</h3>
-            <button onClick={() => router.push('/main-categories')} className="card-button">
-              مدیریت سر دسته‌ها
+            <h3>رویدادها</h3>
+            <button onClick={() => router.push('/events')} className="card-button">
+              مدیریت رویدادها
             </button>
           </div>
+       
+         
+        
           <div className="card">
             <h3>بنرها</h3>
             <button onClick={() => router.push('/banners')} className="card-button">
@@ -55,6 +64,7 @@ export default function Dashboard() {
               مدیریت تاپیک‌ها
             </button>
           </div>
+        
         </div>
       </div>
     </div>
